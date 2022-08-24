@@ -64,7 +64,7 @@ class OAuthController {
       // }
 
       res.cookie('access_token', access_token);
-      res.redirect(200, `${CLIENT_HOST}/dashboard`);
+      res.redirect(302, `${CLIENT_HOST}/dashboard`);
       // res.jsonp(tokenRes.data);
       return;
     } catch (error) {
