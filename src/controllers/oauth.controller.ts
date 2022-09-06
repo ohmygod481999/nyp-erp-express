@@ -71,7 +71,7 @@ class OAuthController {
       // }
 
       res.cookie('access_token', access_token, {
-        path: "/#/"
+        secure: true
       });
       res.cookie('id_token', id_token);
 
