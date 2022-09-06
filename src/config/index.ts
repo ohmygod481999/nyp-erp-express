@@ -12,6 +12,7 @@ export const {
   DB_USER,
   DB_PASSWORD,
   DB_DATABASE,
+  DB_CERT,
   SECRET_KEY,
   LOG_FORMAT,
   LOG_DIR,
