@@ -71,7 +71,8 @@ class OAuthController {
       // }
 
       res.cookie('access_token', access_token, {
-        secure: true
+        secure: true,
+        domain: ".smartcardnp.vn"
       });
       res.cookie('id_token', id_token);
 
