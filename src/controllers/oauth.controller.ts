@@ -77,7 +77,7 @@ class OAuthController {
       // here: refresh_token
       res.cookie('refresh_token', refresh_token);
 
-      res.redirect(302, `${CLIENT_HOST}/dashboard`);
+      res.redirect(302, `${CLIENT_HOST}/#/dashboard`);
       // res.jsonp(tokenRes.data);
       return;
     } catch (error) {
