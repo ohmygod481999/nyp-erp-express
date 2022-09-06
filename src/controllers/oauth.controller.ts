@@ -74,11 +74,17 @@ class OAuthController {
         secure: true,
         domain: ".smartcardnp.vn"
       });
-      res.cookie('id_token', id_token);
+      res.cookie('id_token', id_token, {
+        secure: true,
+        domain: ".smartcardnp.vn"
+      });
 
       // do something with refresh token
       // here: refresh_token
-      res.cookie('refresh_token', refresh_token);
+      res.cookie('refresh_token', refresh_token, {
+        secure: true,
+        domain: ".smartcardnp.vn"
+      });
 
       res.redirect(302, `${CLIENT_HOST}/#/dashboard`);
       // res.jsonp(tokenRes.data);

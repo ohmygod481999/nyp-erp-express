@@ -27,12 +27,21 @@ const authMiddleware = async (req: RequestWithAccount, res: Response, next: Next
           const tokenData = await oAuthService.refreshToken(current_refresh_token);
           console.log(tokenData)
           // const { access_token, id_token, refresh_token } = tokenData;
-          res.cookie('access_token', tokenData.access_token);
-          res.cookie('id_token', tokenData.id_token);
+          res.cookie('access_token', tokenData.access_token, {
+            secure: true,
+            domain: ".smartcardnp.vn"
+          });
+          res.cookie('id_token', tokenData.id_token, {
+            secure: true,
+            domain: ".smartcardnp.vn"
+          });
 
           // do something with refresh token
           // here: refresh_token
-          res.cookie('refresh_token', tokenData.refresh_token);
+          res.cookie('refresh_token', tokenData.refresh_token, {
+            secure: true,
+            domain: ".smartcardnp.vn"
+          });
           accountInfo = await oAuthService.getAccountInfo(tokenData.access_token);
         }
         else {
