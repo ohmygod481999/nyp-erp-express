@@ -70,7 +70,9 @@ class OAuthController {
       //   });
       // }
 
-      res.cookie('access_token', access_token);
+      res.cookie('access_token', access_token, {
+        path: "/#/"
+      });
       res.cookie('id_token', id_token);
 
       // do something with refresh token
