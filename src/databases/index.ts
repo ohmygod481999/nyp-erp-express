@@ -14,7 +14,7 @@ export const dbConnection: ConnectionOptions = {
     rejectUnauthorized: false,
   },
   // dropSchema: true, // restart server remove all data in database
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: [join(__dirname, '../**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '../**/*.migration{.ts,.js}')],
