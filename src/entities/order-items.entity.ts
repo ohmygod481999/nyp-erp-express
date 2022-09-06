@@ -1,4 +1,4 @@
-import { OrderStatus } from '@/interfaces/order.interface';
+import { OrderItemStatus, OrderStatus } from '@/interfaces/order.interface';
 import { IsNotEmpty } from 'class-validator';
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { CompanyEntity } from './company.entity';
@@ -11,6 +11,15 @@ import { StoreEntity } from './store.entity';
 export class OrderItemsEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    type: 'enum',
+    enum: OrderItemStatus,
+    default: OrderItemStatus.CREATED,
+    nullable: false
+  })
+  @IsNotEmpty()
+  status: OrderItemStatus;
 
   @ManyToOne(type => OrderEntity)
   @JoinColumn({

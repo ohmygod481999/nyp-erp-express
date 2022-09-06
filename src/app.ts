@@ -51,7 +51,8 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT, { stream }));
-    this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+    // this.app.use(cors({ origin: ["http://localhost:3010"], credentials: CREDENTIALS }));
+    this.app.use(cors({ origin: ORIGIN.split(","), credentials: CREDENTIALS }));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());

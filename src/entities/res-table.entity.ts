@@ -13,12 +13,29 @@ export class ResTableEntity extends BaseEntity {
   @IsNotEmpty()
   name: string;
 
+  @Column({
+    nullable: false,
+  })
+  zone_id: number;
+
   @ManyToOne(type => ResZoneEntity)
   @JoinColumn({
     name: 'zone_id',
   })
   @IsNotEmpty()
-  store: ResZoneEntity;
+  zone: ResZoneEntity;
+
+  @Column({
+    nullable: false,
+  })
+  store_id: number;
+
+  @ManyToOne(type => StoreEntity)
+  @JoinColumn({
+    name: 'store_id',
+  })
+  @IsNotEmpty()
+  store: StoreEntity;
 
   @Column()
   @CreateDateColumn()

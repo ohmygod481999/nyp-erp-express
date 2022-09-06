@@ -8,19 +8,45 @@ import OAuthService from '@/services/oauth.service';
 
 const authMiddleware = async (req: RequestWithAccount, res: Response, next: NextFunction) => {
   try {
-    console.log(req.header('Authorization'))
-    const Authorization = req.cookies['Authorization'] || (req.header('Authorization') ? req.header('Authorization').split('Bearer ')[1] : null);
+    console.log(req.header('Authorization'));
 
-    if (Authorization) {
-      const oAuthService = new OAuthService()
-      
-      const accountInfo = await oAuthService.getAccountInfo(Authorization)
+    let access_token = req.cookies['Authorization'] || (req.header('Authorization') ? req.header('Authorization').split('Bearer ')[1] : null);
+
+    if (access_token) {
+      const oAuthService = new OAuthService();
+
+      let accountInfo;
+      try {
+        accountInfo = await oAuthService.getAccountInfo(access_token);
+      } catch (err) {
+        console.log(err)
+        const current_refresh_token = req.header('refreshtoken') || null;
+        console.log("current_refresh_token", current_refresh_token)
+
+        if (current_refresh_token) {
+          const tokenData = await oAuthService.refreshToken(current_refresh_token);
+          console.log(tokenData)
+          // const { access_token, id_token, refresh_token } = tokenData;
+          res.cookie('access_token', tokenData.access_token);
+          res.cookie('id_token', tokenData.id_token);
+
+          // do something with refresh token
+          // here: refresh_token
+          res.cookie('refresh_token', tokenData.refresh_token);
+          accountInfo = await oAuthService.getAccountInfo(tokenData.access_token);
+        }
+        else {
+          next(new HttpException(401, "Wrong authentication token"))
+        }
+      }
+
+      console.log("accountInfo", accountInfo);
 
       if (accountInfo) {
         req.account = accountInfo;
         next();
       } else {
-        next(new HttpException(401, 'Wrong authentication token'));
+        next(new HttpException(401, 'Tài khoản chưa kích hoạt'));
       }
     } else {
       next(new HttpException(404, 'Authentication token missing'));

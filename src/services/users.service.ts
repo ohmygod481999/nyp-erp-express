@@ -15,6 +15,9 @@ class UserService extends Repository<UserEntity> {
 
   public async findOneByOryId(ory_id): Promise<User> {
     const user: User = await UserEntity.findOne({
+      relations: [
+        "company"
+      ],
       where: {
         ory_id,
       },

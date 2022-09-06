@@ -26,9 +26,10 @@ class GalleryRoute implements Routes {
         cb(null, { fieldName: file.fieldname });
       },
       key: function (req: RequestWithAccount, file, cb) {
-        const userId = req.account.user_erp_id
+        const userId = req.account.user_erp_id;
+        const companyId = req.account.company_id;
         const newFileName = Date.now() + '-' + file.originalname;
-        const fullPath = `erp/gallery/${userId}/` + newFileName;
+        const fullPath = `erp/gallery/${companyId}/` + newFileName;
 
         cb(null, fullPath);
       },
@@ -44,6 +45,7 @@ class GalleryRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}`, authMiddleware, this.upload.single('file'), this.galleryController.uploadSingleImage);
+    this.router.post(`${this.path}/delete`, authMiddleware, this.galleryController.deleteImages);
   }
 }
 

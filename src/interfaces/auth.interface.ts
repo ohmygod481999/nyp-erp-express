@@ -10,6 +10,15 @@ export interface TokenData {
   expiresIn: number;
 }
 
+export interface OAuthTokenData {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  id_token: string;
+  scope: string;
+  token_type: string;
+}
+
 export interface RequestWithAccount extends Request {
   account: AccountInfo;
 }

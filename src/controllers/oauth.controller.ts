@@ -9,10 +9,13 @@ import { CLIENT_HOST, HOST, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_URL } fr
 import { makeid } from '@/utils/util';
 import OAuthService from '@/services/oauth.service';
 import UserService from '@/services/users.service';
+import CompanyService from '@/services/company.service';
+import { HttpException } from '@/exceptions/HttpException';
 
 class OAuthController {
   public userService = new UserService();
   public oAuthService = new OAuthService();
+  public companyService = new CompanyService();
 
   public getAuthUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -53,6 +56,10 @@ class OAuthController {
 
       // const accountInfo = await this.oAuthService.getAccountInfo(access_token);
 
+      // if (!accountInfo) {
+      //   // user chua tao trong he thong
+      // }
+
       // console.log(accountInfo);
 
       // const user = await this.userService.findOneByOryId(accountInfo.ory_id);
@@ -64,6 +71,12 @@ class OAuthController {
       // }
 
       res.cookie('access_token', access_token);
+      res.cookie('id_token', id_token);
+
+      // do something with refresh token
+      // here: refresh_token
+      res.cookie('refresh_token', refresh_token);
+
       res.redirect(302, `${CLIENT_HOST}/dashboard`);
       // res.jsonp(tokenRes.data);
       return;
@@ -72,18 +85,81 @@ class OAuthController {
     }
   };
 
+  public refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    const { refresh_token } = req.body;
+    try {
+      const tokenRes = await axios.post(
+        `${OAUTH_URL}/oauth2/token`,
+        querystring.stringify({
+          refresh_token: String(refresh_token),
+          grant_type: 'refresh_token',
+          // redirect_uri: `${HOST}/oauth/callback`,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          auth: {
+            username: OAUTH_CLIENT_ID,
+            password: OAUTH_CLIENT_SECRET,
+          },
+        },
+      );
+      res.jsonp(tokenRes.data);
+    } catch (err) {
+      console.log(err);
+      next(err);
+    }
+
+    // console.log(tokenRes.data);
+  };
+
   public getUserInfo = async (req: RequestWithAccount, res: Response, next: NextFunction) => {
+    console.log('req.account', req.account);
     const user = await this.userService.findOneByOryId(req.account.ory_id);
+    console.log(user);
     if (!user) {
       res.jsonp(null);
-      return
+      return;
     }
     res.jsonp({
       ...req.account,
-      company_id: user.company_id,
+      // company_id: user.company_id,
+      company: user.company,
       user_erp_id: user.id,
     });
     return;
+  };
+
+  public registerNewAccount = async (req: RequestWithAccount, res: Response, next: NextFunction) => {
+    // create company
+    const { company_name, ory_id } = req.body;
+    if (!company_name || !ory_id) {
+      next(new HttpException(400, 'Company_name or ory_id not found'));
+      return;
+    }
+
+    const existAccount = await this.userService.findOneByOryId(ory_id);
+    console.log('existAccount', existAccount);
+    if (existAccount) {
+      next(new HttpException(400, 'User has been registerd'));
+      return;
+    }
+
+    const company = await this.companyService.createCompany({
+      name: company_name,
+    });
+
+    const account = this.userService.createUser({
+      ory_id: ory_id,
+      company_id: company.id,
+    });
+
+    res.jsonp({
+      success: true,
+      data: {},
+      message: 'Thành công',
+    });
   };
 
   public logout = async (req: Request, res: Response, next: NextFunction) => {};

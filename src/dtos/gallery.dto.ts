@@ -8,3 +8,10 @@ export class CreateGalleryFileDto {
   @IsNumber()
   public company_id: number;
 }
+
+export class DeleteGalleryFilesDto {
+  @IsNumber()
+  public company_id: number;
+
+  public image_ids: number[];
+}
