@@ -14,6 +14,11 @@ export class ProductCategoryEntity extends BaseEntity {
   name: string;
 
   @Column({
+    nullable: true
+  })
+  thumbnail: string;
+
+  @Column({
     nullable: false,
   })
   company_id: number;

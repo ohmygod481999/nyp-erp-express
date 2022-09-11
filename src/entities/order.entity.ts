@@ -1,4 +1,4 @@
-import { OrderStatus } from '@/interfaces/order.interface';
+import { Order, OrderStatus } from '@/interfaces/order.interface';
 import { IsNotEmpty } from 'class-validator';
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { CompanyEntity } from './company.entity';
@@ -7,7 +7,7 @@ import { ResZoneEntity } from './res-zone.entity';
 import { StoreEntity } from './store.entity';
 
 @Entity('order')
-export class OrderEntity extends BaseEntity {
+export class OrderEntity extends BaseEntity implements Order {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -56,7 +56,7 @@ export class OrderEntity extends BaseEntity {
   table: ResTableEntity;
 
   @Column()
-  @CreateDateColumn({type: 'timestamptz'})
+  @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
 
   @Column()

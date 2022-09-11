@@ -5,7 +5,7 @@ import { User } from '@interfaces/users.interface';
 import AuthService from '@services/auth.service';
 import axios from 'axios';
 import querystring from 'querystring';
-import { CLIENT_HOST, HOST, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_URL } from '@/config';
+import { CLIENT_HOST, HOST, NODE_ENV, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_URL } from '@/config';
 import { makeid } from '@/utils/util';
 import OAuthService from '@/services/oauth.service';
 import UserService from '@/services/users.service';
@@ -70,21 +70,27 @@ class OAuthController {
       //   });
       // }
 
-      res.cookie('access_token', access_token, {
+      res.cookie('access_token', access_token
+      , NODE_ENV === "production" && {
         secure: true,
         domain: ".smartcardnp.vn"
-      });
-      res.cookie('id_token', id_token, {
+      }
+      );
+      res.cookie('id_token', id_token
+      , NODE_ENV === "production" && {
         secure: true,
         domain: ".smartcardnp.vn"
-      });
+      }
+      );
 
       // do something with refresh token
       // here: refresh_token
-      res.cookie('refresh_token', refresh_token, {
+      res.cookie('refresh_token', refresh_token
+      , NODE_ENV === "production" && {
         secure: true,
         domain: ".smartcardnp.vn"
-      });
+      }
+      );
 
       res.redirect(302, `${CLIENT_HOST}/#/dashboard`);
       // res.jsonp(tokenRes.data);

@@ -32,3 +32,5 @@ export const {
   OAUTH_CLIENT_ID,
   OAUTH_CLIENT_SECRET,
 } = process.env;
+
+console.log(NODE_ENV)
