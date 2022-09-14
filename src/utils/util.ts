@@ -1,3 +1,5 @@
+import QRCode from "qrcode"
+
 /**
  * @method isEmpty
  * @param {String | Number | Object} value
@@ -27,3 +29,15 @@ export function makeid(length) {
   }
   return result;
 }
+
+export const getQrUrl = (url) => {
+  return new Promise((resolve, reject) => {
+      QRCode.toDataURL(url, function (err, _url) {
+          if (err) {
+              reject(err);
+          } else {
+              resolve(_url);
+          }
+      });
+  });
+};

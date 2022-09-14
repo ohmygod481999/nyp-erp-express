@@ -1,10 +1,10 @@
-import { Store } from "@/interfaces/store.interface";
-import { IsNotEmpty } from "class-validator";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { CompanyEntity } from "./company.entity";
+import { Store } from '@/interfaces/store.interface';
+import { IsNotEmpty } from 'class-validator';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { CompanyEntity } from './company.entity';
 
-@Entity("store")
-export class StoreEntity extends BaseEntity implements Store{
+@Entity('store')
+export class StoreEntity extends BaseEntity implements Store {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -12,9 +12,12 @@ export class StoreEntity extends BaseEntity implements Store{
   @IsNotEmpty()
   name: string;
 
+  @Column()
+  company_id: number;
+
   @ManyToOne(type => CompanyEntity)
   @JoinColumn({
-    name: "company_id",
+    name: 'company_id',
   })
   @IsNotEmpty()
   company: CompanyEntity;

@@ -7,6 +7,7 @@ export const {
   PORT,
   HOST,
   CLIENT_HOST,
+  ORDER_HOST,
   DB_HOST,
   DB_PORT,
   DB_USER,

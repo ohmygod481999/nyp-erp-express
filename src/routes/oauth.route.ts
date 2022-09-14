@@ -22,6 +22,7 @@ class OAuthRoute implements Routes {
     this.router.get(`${this.path}/userinfo`, authMiddleware, this.oauthController.getUserInfo);
     this.router.post(`${this.path}/refresh_token`, this.oauthController.refreshToken);
     this.router.post(`${this.path}/register_new_account`, this.oauthController.registerNewAccount);
+    this.router.post(`${this.path}/register_new_account_exist_company`, this.oauthController.registerNewAccountExistCompany);
   }
 }
 

@@ -26,6 +26,7 @@ export const dbConnection: ConnectionOptions = {
     rejectUnauthorized: false,
   },
   // dropSchema: true, // restart server remove all data in database
+  // synchronize: true,
   synchronize: false,
   logging: false,
   entities: [

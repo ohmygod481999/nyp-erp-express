@@ -11,6 +11,7 @@ import OAuthService from '@/services/oauth.service';
 import UserService from '@/services/users.service';
 import CompanyService from '@/services/company.service';
 import { HttpException } from '@/exceptions/HttpException';
+import { CompanyEntity } from '@/entities/company.entity';
 
 class OAuthController {
   public userService = new UserService();
@@ -70,26 +71,32 @@ class OAuthController {
       //   });
       // }
 
-      res.cookie('access_token', access_token
-      , NODE_ENV === "production" && {
-        secure: true,
-        domain: ".smartcardnp.vn"
-      }
+      res.cookie(
+        'access_token',
+        access_token,
+        NODE_ENV === 'production' && {
+          secure: true,
+          domain: '.smartcardnp.vn',
+        },
       );
-      res.cookie('id_token', id_token
-      , NODE_ENV === "production" && {
-        secure: true,
-        domain: ".smartcardnp.vn"
-      }
+      res.cookie(
+        'id_token',
+        id_token,
+        NODE_ENV === 'production' && {
+          secure: true,
+          domain: '.smartcardnp.vn',
+        },
       );
 
       // do something with refresh token
       // here: refresh_token
-      res.cookie('refresh_token', refresh_token
-      , NODE_ENV === "production" && {
-        secure: true,
-        domain: ".smartcardnp.vn"
-      }
+      res.cookie(
+        'refresh_token',
+        refresh_token,
+        NODE_ENV === 'production' && {
+          secure: true,
+          domain: '.smartcardnp.vn',
+        },
       );
 
       res.redirect(302, `${CLIENT_HOST}/#/dashboard`);
@@ -164,6 +171,39 @@ class OAuthController {
     const company = await this.companyService.createCompany({
       name: company_name,
     });
+
+    const account = this.userService.createUser({
+      ory_id: ory_id,
+      company_id: company.id,
+    });
+
+    res.jsonp({
+      success: true,
+      data: {},
+      message: 'Thành công',
+    });
+  };
+
+  public registerNewAccountExistCompany = async (req: RequestWithAccount, res: Response, next: NextFunction) => {
+    // create company
+    const { company_id, ory_id } = req.body;
+    if (!company_id || !ory_id) {
+      next(new HttpException(400, 'company_id or ory_id not found'));
+      return;
+    }
+
+    const existAccount = await this.userService.findOneByOryId(ory_id);
+    console.log('existAccount', existAccount);
+    if (existAccount) {
+      next(new HttpException(400, 'User has been registerd'));
+      return;
+    }
+
+    const company = await CompanyEntity.findOne(company_id);
+
+    if (!company) {
+      next(new HttpException(400, 'company_id not found'));
+    }
 
     const account = this.userService.createUser({
       ory_id: ory_id,

@@ -52,8 +52,9 @@ export class ProductEntity extends BaseEntity implements Product {
   })
   order_count: number;
 
-  @Column()
-  @IsNotEmpty()
+  @Column({
+    nullable: true
+  })
   thumbnail: string;
 
   @Column()
