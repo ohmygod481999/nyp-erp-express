@@ -20,6 +20,16 @@ export class ResZoneEntity extends BaseEntity {
   store: StoreEntity;
 
   @Column()
+  company_id: number;
+
+  @ManyToOne(type => CompanyEntity)
+  @JoinColumn({
+    name: 'company_id',
+  })
+  @IsNotEmpty()
+  company: CompanyEntity;
+
+  @Column()
   @CreateDateColumn()
   created_at: Date;
 

@@ -7,6 +7,7 @@ class OrderController {
   public createOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { company_id, store_id, table_id } = req.body;
+      console.log(company_id, store_id, table_id)
       const order = await this.orderService.createOrder({
         company_id,
         store_id,

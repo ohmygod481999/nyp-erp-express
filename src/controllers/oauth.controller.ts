@@ -99,7 +99,7 @@ class OAuthController {
         },
       );
 
-      res.redirect(302, `${CLIENT_HOST}/#/dashboard`);
+      res.redirect(302, `${CLIENT_HOST}/#/`);
       // res.jsonp(tokenRes.data);
       return;
     } catch (error) {

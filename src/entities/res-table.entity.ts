@@ -13,6 +13,17 @@ export class ResTableEntity extends BaseEntity {
   @IsNotEmpty()
   name: string;
 
+
+  @Column()
+  company_id: number;
+
+  @ManyToOne(type => CompanyEntity)
+  @JoinColumn({
+    name: 'company_id',
+  })
+  @IsNotEmpty()
+  company: CompanyEntity;
+
   @Column({
     nullable: false,
   })
